@@ -1,0 +1,7 @@
+apiVersion: 1
+
+providers:
+  - name: 'Platform Breakdown'
+    type: file
+    options:
+      path: /etc/grafana/provisioning/dashboards
