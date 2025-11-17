@@ -6,17 +6,17 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOption
   return builder
     
     .addFieldNamePicker({
-      path: 'fieldMentionsPercent',
+      path: 'totalVoicesCount',
       name: '(KPI) Total Posts',
       description: 'Select the total posts field',
     })
     .addFieldNamePicker({
-      path: 'fieldMentionsPercent',
+      path: 'platformVoicesCount',
       name: '(KPI) Platform Posts',
       description: 'Select the total platform posts field',
     })
     .addFieldNamePicker({
-      path: 'fieldMentionsPercent',
+      path: 'socialVoicesCount',
       name: '(KPI) Social Media Posts',
       description: 'Select the total social media posts field',
     })
@@ -34,6 +34,16 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOption
       path: 'fieldMentionsPercent',
       name: 'Mentions Percent Field',
       description: 'Select the percentage field for each of the social media sources',
+    })
+    .addFieldNamePicker({
+      path: 'fieldLanguage',
+      name: 'Language Field',
+      description: 'Select the language field',
+    })
+    .addFieldNamePicker({
+      path: 'fieldLanguagePercent',
+      name: 'Language Percentage',
+      description: 'Select the language percentage field',
     })
     .addColorPicker({
       path: 'barColor',

@@ -11,6 +11,11 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
   const {
     title,
     subtitle,
+    totalVoicesCount,
+    platformVoicesCount,
+    socialVoicesCount,
+    fieldLanguage,
+    fieldLanguagePercent,
     fieldCategory,
     fieldMentionsPercent,
     fieldMentionsCount,
@@ -35,6 +40,11 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
       category: get(fieldCategory),
       mentionsPercent: get(fieldMentionsPercent),
       mentionsCount: get(fieldMentionsCount),
+      voicesCount: get(totalVoicesCount),
+      platformCount: get(platformVoicesCount),
+      socialCount: get(socialVoicesCount),
+      languages: get(fieldLanguage),
+      languagesPercent: get(fieldLanguagePercent),
     };
   });
 
@@ -85,23 +95,21 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
       >
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 36, fontWeight: 'bold', color: '#1B7E3C' }}>
-            6345
+            {rows[0]?.voicesCount ?? 0}
           </div>
           <div style={{ fontSize: 14, color: '#555' }}>Total Voices</div>
         </div>
 
-
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 36, fontWeight: 'bold', color: '#1B7E3C' }}>
-            1785
+            {rows[0]?.platformCount ?? 0}
           </div>
           <div style={{ fontSize: 14, color: '#555' }}>Platform Posts</div>
         </div>
 
-
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: 36, fontWeight: 'bold', color: '#1B7E3C' }}>
-        6574
+            {rows[0]?.socialCount ?? 0}
           </div>
           <div style={{ fontSize: 14, color: '#555' }}>Social Media</div>
         </div>
@@ -139,7 +147,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
               overflowWrap: 'break-word',
             }}
           >
-            {options.showNumbering ? `${i + 1}. ` : ''}{row.category}
+            {options.showNumbering ? `${i + 1}. ` : ''}{row.category ?? 'category'}
           </h3>
 
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap'}}>
@@ -153,7 +161,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
               alignItems: 'center',
               justifyContent: 'center',  
             }}>
-              {Number(row.mentionsPercent).toFixed(options.decimalPlaces ?? 1)}%
+              {Number(row.mentionsPercent ?? '0').toFixed(options.decimalPlaces ?? 1)}%
             </div>
           </div>
             
@@ -167,7 +175,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
               wordWrap: 'break-word',
             }}
           >
-            <strong>{row.mentionsCount} posts </strong>
+            <strong>{row.mentionsCount ?? '0'} posts </strong>
           </p>
         </div>       
       ))}
@@ -185,7 +193,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
               fontSize: 13,
             }}
           >
-            {row.category} {row.mentionsPercent}%
+            {row.languages ?? 'language'} {row.languagesPercent ?? '0'}%
           </div>
         ))}
       </div>
