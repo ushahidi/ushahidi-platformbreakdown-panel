@@ -1,68 +1,193 @@
 import React from 'react';
 import { PanelProps } from '@grafana/data';
 import { SimpleOptions } from 'types';
-import { css, cx } from '@emotion/css';
-import { useStyles2, useTheme2 } from '@grafana/ui';
-import { PanelDataErrorView } from '@grafana/runtime';
+// import { css, cx } from '@emotion/css';
+// import { useStyles2, useTheme2 } from '@grafana/ui';
+// import { PanelDataErrorView } from '@grafana/runtime';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
-const getStyles = () => {
-  return {
-    wrapper: css`
-      font-family: Open Sans;
-      position: relative;
-    `,
-    svg: css`
-      position: absolute;
-      top: 0;
-      left: 0;
-    `,
-    textBox: css`
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      padding: 10px;
-    `,
-  };
-};
+export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) => {
+  const {
+    title,
+    subtitle,
+    fieldCategory,
+    fieldMentionsPercent,
+    fieldMentionsCount,
+  } = options;
 
-export const SimplePanel: React.FC<Props> = ({ options, data, width, height, fieldConfig, id }) => {
-  const theme = useTheme2();
-  const styles = useStyles2(getStyles);
-
-  if (data.series.length === 0) {
-    return <PanelDataErrorView fieldConfig={fieldConfig} panelId={id} data={data} needsStringField />;
+  // Handle no data case
+  if (!data.series.length) {
+    return <div style={{ padding: 12 }}>No data to display</div>;
   }
+
+  // Use the first series (Grafana data frame)
+  const frame = data.series[0];
+
+  // Extract rows
+  const rows = Array.from({ length: frame.length || frame.fields[0].values.length }, (_, i) => {
+    const get = (field?: string) => {
+      const f = field ? frame.fields.find(f => f.name === field) : undefined;
+      return f ? f.values.get(i) : undefined;
+    };
+
+    return {
+      category: get(fieldCategory),
+      mentionsPercent: get(fieldMentionsPercent),
+      mentionsCount: get(fieldMentionsCount),
+    };
+  });
 
   return (
     <div
-      className={cx(
-        styles.wrapper,
-        css`
-          width: ${width}px;
-          height: ${height}px;
-        `
-      )}
+      style={{
+        width,
+        height,
+        padding: 12,
+        overflowY: 'auto',
+      }}
     >
-      <svg
-        className={styles.svg}
-        width={width}
-        height={height}
-        xmlns="http://www.w3.org/2000/svg"
-        xmlnsXlink="http://www.w3.org/1999/xlink"
-        viewBox={`-${width / 2} -${height / 2} ${width} ${height}`}
+      <h2
+        style={{
+          fontSize: 16,
+          fontWeight: 'bold',
+          marginBottom: 8,
+          overflowWrap: 'break-word',
+        }}
       >
-        <g>
-          <circle data-testid="simple-panel-circle" style={{ fill: theme.colors.primary.main }} r={100} />
-        </g>
-      </svg>
+        {title}
+      </h2>
 
-      <div className={styles.textBox}>
-        {options.showSeriesCount && (
-          <div data-testid="simple-panel-series-counter">Number of series: {data.series.length}</div>
-        )}
-        <div>Text option value: {options.text}</div>
+      <h3
+        style={{
+          fontSize: 14,
+          color: '#555',
+          marginBottom: 12,
+          overflowWrap: 'break-word',
+        }}
+      >
+        {subtitle}
+      </h3>
+
+      <h2 style={{ marginTop: 20, marginBottom: 8, fontSize: 18, fontWeight: 'bold', overflowWrap: 'break-word' }}>Community Engagement</h2>
+
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: width < 300 ? 'column' : 'row',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          gap: 24,
+          marginBottom: 20,
+          marginRight: 24,
+          marginLeft: 24
+        }}
+      >
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 36, fontWeight: 'bold', color: '#1B7E3C' }}>
+            6345
+          </div>
+          <div style={{ fontSize: 14, color: '#555' }}>Total Voices</div>
+        </div>
+
+
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 36, fontWeight: 'bold', color: '#1B7E3C' }}>
+            1785
+          </div>
+          <div style={{ fontSize: 14, color: '#555' }}>Platform Posts</div>
+        </div>
+
+
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: 36, fontWeight: 'bold', color: '#1B7E3C' }}>
+        6574
+          </div>
+          <div style={{ fontSize: 14, color: '#555' }}>Social Media</div>
+        </div>
+      </div>
+            
+      <h2 style={{ marginBottom: 8, fontSize: 18, fontWeight: 'bold', overflowWrap: 'break-word' }}>Platform Breakdown</h2>
+
+      {rows.map((row, i) => (
+        <div
+          key={i}
+          style={{
+            border: '1px solid #ddd',
+            borderRadius: 12,
+            padding: 16,
+            marginBottom: 12,
+            background: 'white',
+          }}
+        >
+          <div
+            style={{
+              marginTop: 8,
+              fontSize: 12,
+              fontWeight: 500,
+              display: 'flex',
+              flexDirection: width < 300 ? 'column' : 'row',
+              justifyContent: 'space-between',
+            
+            }}
+          >
+            <h3
+            style={{
+              margin: 0,
+              fontSize: 16,
+              fontWeight: 'bold',
+              overflowWrap: 'break-word',
+            }}
+          >
+            {options.showNumbering ? `${i + 1}. ` : ''}{row.category}
+          </h3>
+
+          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap'}}>
+            <div
+            style={{
+              padding: '2px 12px',
+              background: '#F4F4F4',
+              borderRadius: 20,
+              fontSize: 14,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',  
+            }}>
+              {Number(row.mentionsPercent).toFixed(options.decimalPlaces ?? 1)}%
+            </div>
+          </div>
+            
+          </div>
+
+          <p
+            style={{
+              margin: 0,
+              fontSize: 14,
+              color: '#444',
+              wordWrap: 'break-word',
+            }}
+          >
+            <strong>{row.mentionsCount} posts </strong>
+          </p>
+        </div>       
+      ))}
+
+      <h2 style={{ marginTop: 20, marginBottom: 16, fontSize: 18, fontWeight: 'bold' }}>Language Distribution</h2>
+
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        {rows.map((row, i) => (
+          <div
+            key={i}
+            style={{
+              padding: '6px 12px',
+              background: '#F4F4F4',
+              borderRadius: 20,
+              fontSize: 13,
+            }}
+          >
+            {row.category} {row.mentionsPercent}%
+          </div>
+        ))}
       </div>
     </div>
   );
