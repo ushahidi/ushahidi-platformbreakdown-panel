@@ -128,6 +128,20 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
             background: 'white',
           }}
         >
+        {/* <div
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: '50%',
+              background: '#E7F0FF',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 20,
+            }}
+              >
+                {row.mentionsCount ?? '⭐'}
+        </div> */}
           <div
             style={{
               marginTop: 8,
