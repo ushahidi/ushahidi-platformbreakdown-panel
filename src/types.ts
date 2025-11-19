@@ -1,6 +1,4 @@
 export interface SimpleOptions {
-  title: string;
-  subtitle: string;
   totalVoicesCount?: string;
   platformVoicesCount?: string;
   socialVoicesCount?: string;
@@ -10,6 +8,7 @@ export interface SimpleOptions {
   fieldLanguage?: string;
   fieldLanguagePercent?: string;
   iconColor?: string;
+  statColor?: string;
   showNumbering?: boolean;
   decimalPlaces?: number;
   icon?: string

@@ -1,6 +1,7 @@
 import React from 'react';
 import { PanelProps } from '@grafana/data';
 import { SimpleOptions } from 'types';
+import './SimplePanel.css';
 // import { css, cx } from '@emotion/css';
 // import { useStyles2, useTheme2 } from '@grafana/ui';
 // import { PanelDataErrorView } from '@grafana/runtime';
@@ -9,8 +10,6 @@ interface Props extends PanelProps<SimpleOptions> {}
 
 export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) => {
   const {
-    title,
-    subtitle,
     totalVoicesCount,
     platformVoicesCount,
     socialVoicesCount,
@@ -21,15 +20,19 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
     fieldMentionsCount,
     icon,
     iconColor,
+    statColor
   } = options;
 
   // Handle no data case
   if (!data.series.length) {
-    return <div style={{ padding: 12 }}>No data to display</div>;
+    return <div className="panel-container">No data to display</div>;
   }
 
   // Use the first series (Grafana data frame)
   const frame = data.series[0];
+  
+  //responsive breakpoint helper
+  const isNarrow = width < 300;
 
   // Extract rows
   const rows = Array.from({ length: frame.length || frame.fields[0].values.length }, (_, i) => {
@@ -49,199 +52,81 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
       languagesPercent: get(fieldLanguagePercent),
       icon: get(icon),
       iconColor: get(iconColor),
+      statColor: get(statColor),
     };
   });
 
   return (
-    <div
-      style={{
-        width,
-        height,
-        padding: 12,
-        overflowY: 'auto',
-      }}
-    >
-      <h2
-        style={{
-          fontSize: 16,
-          fontWeight: 'bold',
-          marginBottom: 8,
-          overflowWrap: 'break-word',
-        }}
-      >
-        {title}
-      </h2>
+    <div className="panel-container" style={{ width, height }}>
 
-      <h3
-        style={{
-          fontSize: 14,
-          color: '#555',
-          marginBottom: 12,
-          overflowWrap: 'break-word',
-        }}
-      >
-        {subtitle}
-      </h3>
+      <h2 className="panel-section-header">Community Engagement</h2>
 
-      <h2 style={{ marginTop: 20, marginBottom: 8, fontSize: 18, fontWeight: 'bold', overflowWrap: 'break-word' }}>Community Engagement</h2>
-
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: width < 300 ? 'column' : 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: 24,
-          marginBottom: 20,
-          marginRight: 24,
-          marginLeft: 24
-        }}
+      <div className={`panel-stats-row ${isNarrow ? 'is-narrow' : ''}`}
+        style={{ color: options.statColor }}
       >
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 36, fontWeight: 'bold', color: '#1B7E3C' }}>
-            {rows[0]?.voicesCount ?? 0}
-          </div>
-          <div style={{ fontSize: 14, color: '#555' }}>Total Voices</div>
+        <div className="panel-stat-item">
+          <div className="panel-stat-value">{rows[0]?.voicesCount ?? 0}</div>
+          <div className="panel-stat-label">Total Voices</div>
         </div>
 
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 36, fontWeight: 'bold', color: '#1B7E3C' }}>
-            {rows[0]?.platformCount ?? 0}
-          </div>
-          <div style={{ fontSize: 14, color: '#555' }}>Platform Posts</div>
+        <div className="panel-stat-item">
+          <div className="panel-stat-value">{rows[0]?.platformCount ?? 0}</div>
+          <div className="panel-stat-label">Platform Posts</div>
         </div>
 
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 36, fontWeight: 'bold', color: '#1B7E3C' }}>
-            {rows[0]?.socialCount ?? 0}
-          </div>
-          <div style={{ fontSize: 14, color: '#555' }}>Social Media</div>
+        <div className="panel-stat-item">
+          <div className="panel-stat-value">{rows[0]?.socialCount ?? 0}</div>
+          <div className="panel-stat-label">Social Media</div>
         </div>
       </div>
-            
-      <h2 style={{ marginBottom: 8, fontSize: 18, fontWeight: 'bold', overflowWrap: 'break-word' }}>Platform Breakdown</h2>
+
+      <h2 className="panel-section-header top-spacing">Platform Breakdown</h2>
 
       {rows.map((row, i) => (
-        <div
-          key={i}
-          style={{
-            border: '1px solid #ddd',
-            borderRadius: 12,
-            padding: 16,
-            marginBottom: 12,
-            background: 'white',
-          }}
-        >
+        <div key={i} className="panel-card">
           {/* row wrapper for icon and details */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: width < 300 ? 'column' : 'row',
-              alignItems: 'center',
-              gap: 12,
-            }}
-          >
+          <div className={`panel-card-inner ${isNarrow ? 'is-narrow' : ''}`}>
             <div
-              style={{
-                minWidth: 40,
-                minHeight: 40,
-                width: 40,
-                height: 40,
-                borderRadius: '50%',
-                background: row.iconColor ?? '#ddd',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexShrink: 0,
-              }}
+              className="panel-card-icon-wrapper"
+              style={{ background: row.iconColor ?? '#ddd' }}
             >
-               {row.icon?.startsWith('http') ? (
-                <img
-                  src={row.icon}
-                  alt=""
-                  style={{
-                    width: 20,
-                    height: 20,
-                    objectFit: 'contain',
-                  }}
-                />
+              {row.icon?.startsWith('http') ? (
+                <img src={row.icon} alt="" className="panel-card-icon-img" />
               ) : (
-                row.icon ?? '⭐'
+                row.icon ?? '↓'
               )}
             </div>
 
-            <div style={{ flex: 1 }}>
+            <div className="panel-card-content">
               {/* category and percentage pill row */}
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: width < 300 ? 'column' : 'row',
-                  justifyContent: 'space-between',
-                  alignItems: width < 300 ? 'center' : 'center',
-                  gap: 8,
-                }}
-              >
-                <h3
-                  style={{
-                    margin: 0,
-                    fontSize: 16,
-                    fontWeight: 'bold',
-                    overflowWrap: 'break-word',
-                  }}
-                >
+              <div className={`panel-card-header-row ${isNarrow ? 'is-narrow' : ''}`}>
+                <h3 className="panel-category-title">
                   {options.showNumbering ? `${i + 1}. ` : ''}
                   {row.category ?? 'category'}
                 </h3>
 
-              <div
-                style={{
-                  padding: '2px 12px',
-                  background: '#F4F4F4',
-                  borderRadius: 20,
-                  fontSize: 14,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                {Number(row.mentionsPercent ?? '0').toFixed(
-                  options.decimalPlaces ?? 1
-                )}
-                %
+                <div className="panel-percent-pill">
+                  {Number(row.mentionsPercent ?? '0').toFixed(
+                    options.decimalPlaces ?? 1
+                  )}%
+                </div>
               </div>
-            </div>
 
-            {/* posts count row */}
-            <p
-              style={{
-                margin: 0,
-                marginTop: 6,
-                fontSize: 14,
-                color: '#444',
-                wordWrap: 'break-word',
-              }}
-            >
-              <strong>{row.mentionsCount ?? '0'} posts</strong>
-            </p>
+              {/* posts count row */}
+              <p className={`panel-card-posts-count ${isNarrow ? 'is-narrow' : ''}`}>
+                <strong>{row.mentionsCount ?? '0'} posts</strong>
+              </p>
+            </div>
           </div>
-        </div>
         </div>
       ))}
 
-      <h2 style={{ marginTop: 20, marginBottom: 16, fontSize: 18, fontWeight: 'bold' }}>Language Distribution</h2>
-
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+      <h2 className="panel-section-header top-spacing">Language Distribution</h2>
+      <div className="panel-lang-container">
         {rows.map((row, i) => (
-          <div
-            key={i}
-            style={{
-              padding: '6px 12px',
-              background: '#F4F4F4',
-              borderRadius: 20,
-              fontSize: 13,
-            }}
-          >
-            {row.languages ?? 'language'} {row.languagesPercent ?? '0'}%
+          <div key={i} className="panel-lang-pill">
+            {row.languages ?? 'language'} {Number(row.languagesPercent ?? '0').toFixed(
+              options.decimalPlaces ?? 1)}%
           </div>
         ))}
       </div>

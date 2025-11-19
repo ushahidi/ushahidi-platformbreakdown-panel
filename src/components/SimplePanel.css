@@ -1,0 +1,148 @@
+.panel-container {
+  padding: 12px;
+  overflow-y: auto;
+}
+
+.panel-section-header {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  overflow-wrap: break-word;
+}
+
+.panel-section-header.top-spacing {
+  margin-top: 20px;
+}
+
+/* community engagement stats */
+.panel-stats-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin: 0 24px 0px 24px;
+}
+
+.panel-stats-row.is-narrow {
+  flex-direction: column;
+}
+
+.panel-stat-item {
+  text-align: center;
+}
+
+.panel-stat-value {
+  font-size: 36px;
+  font-weight: bold;
+}
+
+.panel-stat-label {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Platform Breakdown Cards */
+.panel-card {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  background: white;
+}
+
+.panel-card-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.panel-card-inner.is-narrow {
+  flex-direction: column;
+}
+
+/* Icons */
+.panel-card-icon-wrapper {
+  min-width: 40px;
+  min-height: 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.panel-card-icon-img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/* Card Content */
+.panel-card-content {
+  flex: 1;
+  width: 100%;
+}
+
+.panel-card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-card-header-row.is-narrow {
+  flex-direction: column;
+  align-items: center;
+}
+
+.panel-category-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  overflow-wrap: break-word;
+}
+
+.panel-percent-pill {
+  padding: 2px 12px;
+  background: #F4F4F4;
+  border-radius: 20px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel-card-posts-count {
+  margin: 0;
+  margin-top: 6px;
+  font-size: 14px;
+  color: #444;
+  word-wrap: break-word;
+}
+
+.panel-card-posts-count.is-narrow {
+  margin: 0;
+  margin-top: 6px;
+  font-size: 14px;
+  color: #444;
+  word-wrap: break-word;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* language distribution */
+.panel-lang-container {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.panel-lang-pill {
+  padding: 6px 12px;
+  background: #F4F4F4;
+  border-radius: 20px;
+  font-size: 13px;
+}

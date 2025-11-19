@@ -20,6 +20,12 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOption
       name: '(KPI) Social Media Posts',
       description: 'Select the total social media posts field',
     })
+    .addColorPicker({
+      path: 'statColor',
+      name: 'KPI Value Color',
+      description: 'Choose the KPIs Color',
+      defaultValue: 'green'
+    })
     .addFieldNamePicker({
       path: 'fieldCategory',
       name: 'Category Field',
