@@ -2,6 +2,10 @@ import React from 'react';
 import { PanelProps } from '@grafana/data';
 import { SimpleOptions } from 'types';
 import './SimplePanel.css';
+import ushahidiIcon from '../img/ushahidi.svg';
+import facebookIcon from '../img/facebook.svg';
+import twitterIcon from '../img/twitter.svg';
+import youtubeIcon from '../img/youtube.svg';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
@@ -15,12 +19,29 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
     fieldCategory,
     fieldMentionsPercent,
     fieldMentionsCount,
-    icon,
-    iconColor,
     statColor
   } = options;
 
-  // Handle no data case
+  const getCategoryStyle = (categoryName: string) => {
+    const normalized = categoryName?.toLowerCase().trim() || '';
+    switch (normalized) {
+      case 'platform':
+        return { icon: ushahidiIcon, color: '#EFC44C' };
+      
+      case 'facebook':
+        return { icon: facebookIcon, color: '#8B9DC3' };
+      
+      case 'twitter':
+        return { icon: twitterIcon, color: '#1DA1F2' };
+
+      case 'youtube':
+        return { icon: youtubeIcon, color: '#CC181E' };
+
+      default:
+        return { icon: '', color: '#8e8e8e' };
+    }
+  };
+
   if (!data.series.length) {
     return <div className="panel-container">No data to display</div>
   }
@@ -44,19 +65,21 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
       socialCount: getValue(socialVoicesCount, 0),
     };
 
-    // extract category rows; filter out empty categories
+    // extract platform Rows and apply icon logic
     const platformRows = [];
     for (let i = 0; i < length; i++) {
       const category = getValue(fieldCategory, i);
 
       // only add to list if category exists
       if (category) {
+        const style = getCategoryStyle(category);
+
         platformRows.push({
           category: category,
           mentionsPercent: getValue(fieldMentionsPercent, i),
           mentionsCount: getValue(fieldMentionsCount, i),
-          icon: getValue(icon, i),
-          iconColor: getValue(iconColor, i),
+          icon: style.icon,
+          iconColor: style.color,
         });
       }
     }
@@ -110,9 +133,10 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
           <div className={`panel-card-inner ${isNarrow ? 'is-narrow' : ''}`}>
             <div
               className="panel-card-icon-wrapper"
-              style={{ background: row.iconColor ?? '#ddd' }}
+              style={{ background: row.iconColor }}
             >
-              {row.icon?.startsWith('http') ? (
+              {/* if it looks like a url, render img, else text */}
+              {row.icon?.startsWith('http') || row.icon?.startsWith('/') ? (
                 <img src={row.icon} alt="" className="panel-card-icon-img" />
               ) : (
                 row.icon ?? '↓'
