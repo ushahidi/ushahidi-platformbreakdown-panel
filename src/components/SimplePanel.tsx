@@ -2,9 +2,6 @@ import React from 'react';
 import { PanelProps } from '@grafana/data';
 import { SimpleOptions } from 'types';
 import './SimplePanel.css';
-// import { css, cx } from '@emotion/css';
-// import { useStyles2, useTheme2 } from '@grafana/ui';
-// import { PanelDataErrorView } from '@grafana/runtime';
 
 interface Props extends PanelProps<SimpleOptions> {}
 
@@ -25,36 +22,61 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
 
   // Handle no data case
   if (!data.series.length) {
-    return <div className="panel-container">No data to display</div>;
+    return <div className="panel-container">No data to display</div>
   }
 
   // Use the first series (Grafana data frame)
   const frame = data.series[0];
+
+  const length = frame.length || frame.fields[0].values.length;
+    
+    // helper to get value at specific index
+    const getValue = (fieldName: string | undefined, index: number) => {
+      if (!fieldName) {return undefined;}
+      const field = frame.fields.find(f => f.name === fieldName);
+      return field ? field.values[index] : undefined;
+    };
+
+    // extract KPI stats from the first row
+    const stats = {
+      voicesCount: getValue(totalVoicesCount, 0),
+      platformCount: getValue(platformVoicesCount, 0),
+      socialCount: getValue(socialVoicesCount, 0),
+    };
+
+    // extract category rows; filter out empty categories
+    const platformRows = [];
+    for (let i = 0; i < length; i++) {
+      const category = getValue(fieldCategory, i);
+
+      // only add to list if category exists
+      if (category) {
+        platformRows.push({
+          category: category,
+          mentionsPercent: getValue(fieldMentionsPercent, i),
+          mentionsCount: getValue(fieldMentionsCount, i),
+          icon: getValue(icon, i),
+          iconColor: getValue(iconColor, i),
+        });
+      }
+    }
+
+    // extract language rows; filter out empty languages
+    const languageRows = [];
+    for (let i = 0; i < length; i++) {
+      const lang = getValue(fieldLanguage, i);
+
+      // only add to list if language exists
+      if (lang) {
+        languageRows.push({
+          language: lang,
+          percent: getValue(fieldLanguagePercent, i),
+        });
+      }
+    }
   
   //responsive breakpoint helper
   const isNarrow = width < 300;
-
-  // Extract rows
-  const rows = Array.from({ length: frame.length || frame.fields[0].values.length }, (_, i) => {
-    const get = (field?: string) => {
-      const f = field ? frame.fields.find(f => f.name === field) : undefined;
-      return f ? f.values.get(i) : undefined;
-    };
-
-    return {
-      category: get(fieldCategory),
-      mentionsPercent: get(fieldMentionsPercent),
-      mentionsCount: get(fieldMentionsCount),
-      voicesCount: get(totalVoicesCount),
-      platformCount: get(platformVoicesCount),
-      socialCount: get(socialVoicesCount),
-      languages: get(fieldLanguage),
-      languagesPercent: get(fieldLanguagePercent),
-      icon: get(icon),
-      iconColor: get(iconColor),
-      statColor: get(statColor),
-    };
-  });
 
   return (
     <div className="panel-container" style={{ width, height }}>
@@ -62,27 +84,27 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
       <h2 className="panel-section-header">Community Engagement</h2>
 
       <div className={`panel-stats-row ${isNarrow ? 'is-narrow' : ''}`}
-        style={{ color: options.statColor }}
+        style={{ color: statColor }}
       >
         <div className="panel-stat-item">
-          <div className="panel-stat-value">{rows[0]?.voicesCount ?? 0}</div>
+          <div className="panel-stat-value">{stats.voicesCount ?? 0}</div>
           <div className="panel-stat-label">Total Voices</div>
         </div>
 
         <div className="panel-stat-item">
-          <div className="panel-stat-value">{rows[0]?.platformCount ?? 0}</div>
+          <div className="panel-stat-value">{stats.platformCount ?? 0}</div>
           <div className="panel-stat-label">Platform Posts</div>
         </div>
 
         <div className="panel-stat-item">
-          <div className="panel-stat-value">{rows[0]?.socialCount ?? 0}</div>
+          <div className="panel-stat-value">{stats.socialCount ?? 0}</div>
           <div className="panel-stat-label">Social Media</div>
         </div>
       </div>
 
       <h2 className="panel-section-header top-spacing">Platform Breakdown</h2>
 
-      {rows.map((row, i) => (
+      {platformRows.map((row, i) => (
         <div key={i} className="panel-card">
           {/* row wrapper for icon and details */}
           <div className={`panel-card-inner ${isNarrow ? 'is-narrow' : ''}`}>
@@ -102,7 +124,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
               <div className={`panel-card-header-row ${isNarrow ? 'is-narrow' : ''}`}>
                 <h3 className="panel-category-title">
                   {options.showNumbering ? `${i + 1}. ` : ''}
-                  {row.category ?? 'category'}
+                  {row.category}
                 </h3>
 
                 <div className="panel-percent-pill">
@@ -123,9 +145,10 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
 
       <h2 className="panel-section-header top-spacing">Language Distribution</h2>
       <div className="panel-lang-container">
-        {rows.map((row, i) => (
+
+        {languageRows.map((row, i) => (
           <div key={i} className="panel-lang-pill">
-            {row.languages ?? 'language'} {Number(row.languagesPercent ?? '0').toFixed(
+            {row.language} {Number(row.percent ?? '0').toFixed(
               options.decimalPlaces ?? 1)}%
           </div>
         ))}
