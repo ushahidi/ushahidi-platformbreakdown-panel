@@ -90,7 +90,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
           display: 'flex',
           flexDirection: width < 300 ? 'column' : 'row',
           justifyContent: 'space-between',
-          alignItems: 'flex-start',
+          alignItems: 'center',
           gap: 24,
           marginBottom: 20,
           marginRight: 24,
@@ -132,16 +132,28 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
             background: 'white',
           }}
         >
-        <div
+          {/* row wrapper for icon and details */}
+          <div
             style={{
-              width: 40,
-              height: 40,
-              borderRadius: '50%',
-              background: row.iconColor ?? 'blue',
               display: 'flex',
+              flexDirection: width < 300 ? 'column' : 'row',
               alignItems: 'center',
-              justifyContent: 'center',
+              gap: 12,
             }}
+          >
+            <div
+              style={{
+                minWidth: 40,
+                minHeight: 40,
+                width: 40,
+                height: 40,
+                borderRadius: '50%',
+                background: row.iconColor ?? '#ddd',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
             >
                {row.icon?.startsWith('http') ? (
                 <img
@@ -157,56 +169,63 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
                 row.icon ?? '⭐'
               )}
             </div>
-          <div
-            style={{
-              marginTop: 8,
-              fontSize: 12,
-              fontWeight: 500,
-              display: 'flex',
-              flexDirection: width < 300 ? 'column' : 'row',
-              justifyContent: 'space-between',
-            
-            }}
-          >
-            <h3
-            style={{
-              margin: 0,
-              fontSize: 16,
-              fontWeight: 'bold',
-              overflowWrap: 'break-word',
-            }}
-          >
-            {options.showNumbering ? `${i + 1}. ` : ''}{row.category ?? 'category'}
-          </h3>
 
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap'}}>
-            <div
-            style={{
-              padding: '2px 12px',
-              background: '#F4F4F4',
-              borderRadius: 20,
-              fontSize: 14,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',  
-            }}>
-              {Number(row.mentionsPercent ?? '0').toFixed(options.decimalPlaces ?? 1)}%
+            <div style={{ flex: 1 }}>
+              {/* category and percentage pill row */}
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: width < 300 ? 'column' : 'row',
+                  justifyContent: 'space-between',
+                  alignItems: width < 300 ? 'center' : 'center',
+                  gap: 8,
+                }}
+              >
+                <h3
+                  style={{
+                    margin: 0,
+                    fontSize: 16,
+                    fontWeight: 'bold',
+                    overflowWrap: 'break-word',
+                  }}
+                >
+                  {options.showNumbering ? `${i + 1}. ` : ''}
+                  {row.category ?? 'category'}
+                </h3>
+
+              <div
+                style={{
+                  padding: '2px 12px',
+                  background: '#F4F4F4',
+                  borderRadius: 20,
+                  fontSize: 14,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                {Number(row.mentionsPercent ?? '0').toFixed(
+                  options.decimalPlaces ?? 1
+                )}
+                %
+              </div>
             </div>
-          </div>
-            
-          </div>
 
-          <p
-            style={{
-              margin: 0,
-              fontSize: 14,
-              color: '#444',
-              wordWrap: 'break-word',
-            }}
-          >
-            <strong>{row.mentionsCount ?? '0'} posts </strong>
-          </p>
-        </div>       
+            {/* posts count row */}
+            <p
+              style={{
+                margin: 0,
+                marginTop: 6,
+                fontSize: 14,
+                color: '#444',
+                wordWrap: 'break-word',
+              }}
+            >
+              <strong>{row.mentionsCount ?? '0'} posts</strong>
+            </p>
+          </div>
+        </div>
+        </div>
       ))}
 
       <h2 style={{ marginTop: 20, marginBottom: 16, fontSize: 18, fontWeight: 'bold' }}>Language Distribution</h2>
