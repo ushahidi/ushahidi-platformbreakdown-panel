@@ -9,7 +9,8 @@ export interface SimpleOptions {
   fieldMentionsCount?: string;
   fieldLanguage?: string;
   fieldLanguagePercent?: string;
-  barColor: string;
+  iconColor?: string;
   showNumbering?: boolean;
   decimalPlaces?: number;
+  icon?: string
 }

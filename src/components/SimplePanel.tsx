@@ -19,6 +19,8 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
     fieldCategory,
     fieldMentionsPercent,
     fieldMentionsCount,
+    icon,
+    iconColor,
   } = options;
 
   // Handle no data case
@@ -45,6 +47,8 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
       socialCount: get(socialVoicesCount),
       languages: get(fieldLanguage),
       languagesPercent: get(fieldLanguagePercent),
+      icon: get(icon),
+      iconColor: get(iconColor),
     };
   });
 
@@ -128,20 +132,31 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
             background: 'white',
           }}
         >
-        {/* <div
+        <div
             style={{
               width: 40,
               height: 40,
               borderRadius: '50%',
-              background: '#E7F0FF',
+              background: row.iconColor ?? 'blue',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: 20,
             }}
-              >
-                {row.mentionsCount ?? '⭐'}
-        </div> */}
+            >
+               {row.icon?.startsWith('http') ? (
+                <img
+                  src={row.icon}
+                  alt=""
+                  style={{
+                    width: 20,
+                    height: 20,
+                    objectFit: 'contain',
+                  }}
+                />
+              ) : (
+                row.icon ?? '⭐'
+              )}
+            </div>
           <div
             style={{
               marginTop: 8,

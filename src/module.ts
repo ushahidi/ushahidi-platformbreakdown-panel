@@ -45,10 +45,15 @@ export const plugin = new PanelPlugin<SimpleOptions>(SimplePanel).setPanelOption
       name: 'Language Percentage',
       description: 'Select the language percentage field',
     })
-    .addColorPicker({
-      path: 'barColor',
-      name: 'Bar Color',
-      defaultValue: 'green',
+    .addFieldNamePicker({
+      path: 'iconColor',
+      name: 'Icon Color Field',
+      description: 'Select icon color field'
+    })
+    .addFieldNamePicker({
+      path: 'icon',
+      name: 'Icon Type',
+      description: 'Select icon type'
     })
     .addBooleanSwitch({
       path: 'showNumbering',
