@@ -125,7 +125,7 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
         </div>
       </div>
 
-      <h2 className="panel-section-header top-spacing">Platform Breakdown</h2>
+      <h2 className="panel-section-header top-spacing">Posts Breakdown</h2>
 
       {platformRows.map((row, i) => (
         <div key={i} className="panel-card">
