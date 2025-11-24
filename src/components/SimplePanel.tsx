@@ -8,7 +8,12 @@ import twitterIcon from '../img/twitter.svg';
 import youtubeIcon from '../img/youtube.svg';
 
 interface Props extends PanelProps<SimpleOptions> {}
-
+enum DataSource {
+  PLATFORM = 'platform',
+  FACEBOOK = 'facebook',
+  TWITTER = 'twitter',
+  YOUTUBE = 'youtube'
+}
 export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) => {
   const {
     totalVoicesCount,
@@ -25,20 +30,20 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
   const getCategoryStyle = (categoryName: string) => {
     const normalized = categoryName?.toLowerCase().trim() || '';
     switch (normalized) {
-      case 'platform':
-        return { icon: ushahidiIcon, color: '#EFC44C' };
+      case DataSource.PLATFORM:
+      return { icon: ushahidiIcon, color: '#EFC44C' };
       
-      case 'facebook':
-        return { icon: facebookIcon, color: '#8B9DC3' };
+      case DataSource.FACEBOOK:
+      return { icon: facebookIcon, color: '#8B9DC3' };
       
-      case 'twitter':
-        return { icon: twitterIcon, color: '#1DA1F2' };
+      case DataSource.TWITTER:
+      return { icon: twitterIcon, color: '#1DA1F2' };
 
-      case 'youtube':
-        return { icon: youtubeIcon, color: '#CC181E' };
+      case DataSource.YOUTUBE:
+      return { icon: youtubeIcon, color: '#CC181E' };
 
       default:
-        return { icon: '', color: '#8e8e8e' };
+      return { icon: '', color: '#8e8e8e' };
     }
   };
 
@@ -69,9 +74,8 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
     const platformRows = [];
     for (let i = 0; i < length; i++) {
       const category = getValue(fieldCategory, i);
-
-      // only add to list if category exists
-      if (category) {
+      // only add to list if data-source category exists
+      if (category && Object.values(DataSource).includes(category.toLowerCase().trim() as DataSource)) {
         const style = getCategoryStyle(category);
 
         platformRows.push({
