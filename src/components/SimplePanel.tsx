@@ -170,17 +170,19 @@ export const SimplePanel: React.FC<Props> = ({ options, data, width, height }) =
           </div>
         </div>
       ))}
-
-      <h2 className="panel-section-header top-spacing">Language Distribution</h2>
-      <div className="panel-lang-container">
-
-        {languageRows.map((row, i) => (
-          <div key={i} className="panel-lang-pill">
-            {row.language} {Number(row.percent ?? '0').toFixed(
-              options.decimalPlaces ?? 1)}%
+      {languageRows.length > 0 && (
+        <>
+          <h2 className="panel-section-header top-spacing">Language Distribution</h2>
+          <div className="panel-lang-container">
+            {languageRows.map((row, i) => (
+              <div key={i} className="panel-lang-pill">
+                {row.language} {Number(row.percent ?? '0').toFixed(
+                  options.decimalPlaces ?? 1)}%
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
     </div>
   );
 };
